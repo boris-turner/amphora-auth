@@ -12,7 +12,7 @@ describe(_startCase(filename), function () {
     const fn = lib[this.description];
 
     it('is true if edit mode', function () {
-      expect(fn({ query: { edit: true }})).toEqual(true);
+      expect(fn({ query: { edit: true } })).toEqual(true);
     });
 
     it('is true if POST to api', function () {
@@ -67,7 +67,7 @@ describe(_startCase(filename), function () {
 
   describe('checkAuthentication', function () {
     const fn = lib[this.description],
-      cb = fn({ path: '/foo', prefix: 'domain.com/foo', port: '80'});
+      cb = fn({ path: '/foo', prefix: 'domain.com/foo', port: '80' });
 
     it('calls `next` if no error', function () {
       const nextSpy = jest.fn();
@@ -172,16 +172,18 @@ describe(_startCase(filename), function () {
 
       lib(options);
 
-      // Should call router use 7 times to set the required middlewares
-      expect(router.use).toBeCalledTimes(7);
+      // Should call router use 4 times to set the required middlewares
+      expect(router.use).toBeCalledTimes(4);
     });
 
     it('should add authorization routes', function () {
+      const middlewares = Array(4).fill(expect.any(Function));
+
       lib(options);
 
       expect(router.get).toBeCalledTimes(2);
-      expect(router.get).toBeCalledWith('/_auth/login', expect.any(Function));
-      expect(router.get).toBeCalledWith('/_auth/logout', expect.any(Function));
+      expect(router.get).toBeCalledWith('/_auth/login', ...middlewares);
+      expect(router.get).toBeCalledWith('/_auth/logout', ...middlewares);
     });
   });
 
